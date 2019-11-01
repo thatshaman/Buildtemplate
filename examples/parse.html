@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Parse Buildtemplate</title>
+</head>
+<body>
+    <pre id="output"></pre>
+
+    <script src="../Buildtemplate.js"></script>
+    <script>
+        try {
+            var build = new Buildtemplate("[&DQYfKSUbOD90AHQA9RUAAHMAAAA1FwAAEhcAAAAAAAAAAAAAAAAAAAAAAAA=]");
+            document.getElementById("output").innerText = JSON.stringify(build, null, 2);
+        } catch (e) {
+            document.getElementById("output").innerText = e;
+        }
+    </script>
+</body>
+</html>

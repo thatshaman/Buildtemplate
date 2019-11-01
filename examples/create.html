@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Create Buildtemplate</title>
+</head>
+<body>
+
+    <div id="output"></div>
+
+    <script src="../Buildtemplate.js"></script>
+    <script>
+        var build = new Buildtemplate();
+        build.profession = 6;
+
+        build.specializations[0].id = 31;
+        build.specializations[0].traits = [1, 2, 2];
+
+        build.specializations[1].id = 37;
+        build.specializations[1].traits = [3, 2, 1];
+
+        build.specializations[2].id = 56;
+        build.specializations[2].traits = [3, 3, 3];
+
+        build.skills.terrestrial.heal = 116;
+        build.skills.terrestrial.utilities = [5621, 115, 5941];
+        build.skills.terrestrial.elite = 5906;
+
+        build.skills.aquatic.heal = 0;
+        build.skills.aquatic.utilities = [0, 0, 0];
+        build.skills.aquatic.elite = 0;
+
+        document.getElementById("output").innerText = build.toString();
+    </script>
+</body>
+</html>

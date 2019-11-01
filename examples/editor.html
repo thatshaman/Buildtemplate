@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Edit Buildtemplate</title>
+    <link href="https://d1h9a8s8eodvjz.cloudfront.net/fonts/menomonia/08-02-12/menomonia.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Menomonia;
+        }
+
+        input[type=number] {
+            width: 70px;
+        }
+
+        #profession {
+            width: 600px;
+        }
+
+        #chatcode {
+            width: 600px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Chatcode</h2>
+    <input autocomplete="off" type="text" id="chatcode" />
+    <input autocomplete="off" type="button" value="Parse" onclick="javascript:parse()" /> <input autocomplete="off" type="button" value="Generate" onclick="javascript:generate()" />
+
+    <h2>Profession</h2>
+    <div>
+        <select id="profession">
+            <option value="6">Elementalist</option>
+            <option value="3">Engineer</option>
+            <option value="1">Guardian</option>
+            <option value="7">Mesmer</option>
+            <option value="8">Necromancer</option>
+            <option value="4">Ranger</option>
+            <option value="9">Revenant</option>
+            <option value="5">Thief</option>
+            <option value="2">Warrior</option>
+        </select>
+    </div>
+
+    <h2>Specializations</h2>
+    <div>
+        Specialization <input autocomplete="off" type="number" min="0" max="255" id="specialization_0" value="0" /> Traits <input autocomplete="off" type="number" min="0" max="3" id="specialization_0_0" value="0" /><input autocomplete="off" type="number" min="0" max="3" id="specialization_0_1" value="0" /><input autocomplete="off" type="number" min="0" max="3" id="specialization_0_2" value="0" />
+    </div>
+    <div>
+        Specialization <input autocomplete="off" type="number" min="0" max="255" id="specialization_1" value="0" /> Traits <input autocomplete="off" type="number" min="0" max="3" id="specialization_1_0" value="0" /><input autocomplete="off" type="number" min="0" max="3" id="specialization_1_1" value="0" /><input autocomplete="off" type="number" min="0" max="3" id="specialization_1_2" value="0" />
+    </div>
+    <div>
+        Specialization <input autocomplete="off" type="number" min="0" max="255" id="specialization_2" value="0" /> Traits <input autocomplete="off" type="number" min="0" max="3" id="specialization_2_0" value="0" /><input autocomplete="off" type="number" min="0" max="3" id="specialization_2_1" value="0" /><input autocomplete="off" type="number" min="0" max="3" id="specialization_2_2" value="0" />
+    </div>
+
+    <h2>Terrestrial</h2>
+
+    <div>
+        Heal <input autocomplete="off" type="number" min="0" max="65536" id="terrestrial_heal" value="0" /> Utility <input autocomplete="off" type="number" min="0" max="65536" id="terrestrial_utility_0" value="0" /><input autocomplete="off" type="number" min="0" max="65536" id="terrestrial_utility_1" value="0" /><input autocomplete="off" type="number" min="0" max="65536" id="terrestrial_utility_2" value="0" /> Elite <input autocomplete="off" type="number" min="0" max="65536" id="terrestrial_elite" value="0" />
+    </div>
+
+    <h2>Aquatic</h2>
+
+    <div>
+        Heal <input autocomplete="off" type="number" min="0" max="65536" id="aquatic_heal" value="0" /> Utility <input autocomplete="off" type="number" min="0" max="65536" id="aquatic_utility_0" value="0" /><input autocomplete="off" type="number" min="0" max="65536" id="aquatic_utility_1" value="0" /><input autocomplete="off" type="number" min="0" max="65536" id="aquatic_utility_2" value="0" /> Elite <input autocomplete="off" type="number" min="0" max="65536" id="aquatic_elite" value="0" />
+    </div>
+
+    <h2>Specific</h2>
+    <div id="specifics"></div>
+
+    <script src="../Buildtemplate.js"></script>
+    <script>
+
+        var build = new Buildtemplate();
+        document.getElementById("chatcode").value = build.toString();
+
+        var specifics = document.getElementById("specifics");
+        for (i = 0; i < 16; i++) {
+            var specific = document.createElement("input");
+            specific.setAttribute("type", "number");
+            specific.setAttribute("value", 0);
+            specific.setAttribute("min", 0);
+            specific.setAttribute("max", 255);
+            specific.setAttribute("autocomplete", "off");
+            specific.setAttribute("id", "specific_" + i);
+            specifics.appendChild(specific);
+
+            if (i % 4 === 3) {
+                specifics.appendChild(document.createElement("br"));
+            }
+        }
+
+        function parse() {
+            try {
+
+                build = new Buildtemplate(document.getElementById("chatcode").value);
+                document.getElementById("profession").value = build.profession;
+
+                for (s = 0; s < 3; s++) {
+                    document.getElementById("specialization_" + s).value = build.specializations[s].id;
+                    for (t = 0; t < 3; t++) {
+                        document.getElementById("specialization_" + s + "_" + t).value = build.specializations[s].traits[t];
+                    }
+                }
+
+                document.getElementById("terrestrial_heal").value = build.skills.terrestrial.heal;
+                for (u = 0; u < 3; u++) document.getElementById("terrestrial_utility_" + u).value = build.skills.terrestrial.utilities[u];
+                document.getElementById("terrestrial_elite").value = build.skills.terrestrial.elite;
+
+                document.getElementById("aquatic_heal").value = build.skills.aquatic.heal;
+                for (u = 0; u < 3; u++) document.getElementById("aquatic_utility_" + u).value = build.skills.aquatic.utilities[u];
+                document.getElementById("aquatic_elite").value = build.skills.aquatic.elite;
+
+                for (s = 0; s < 16; s++) {
+                    document.getElementById("specific_" + s).value = build.specific[s];
+                }
+            } catch (e) {
+                alert(e);
+            }
+        }
+
+        function generate() {
+
+            build.profession = document.getElementById("profession").value;
+
+            for (s = 0; s < 3; s++) {
+                build.specializations[s].id = document.getElementById("specialization_" + s).value;
+                for (t = 0; t < 3; t++) {
+                    build.specializations[s].traits[t] = document.getElementById("specialization_" + s + "_" + t).value;
+                }
+            }
+
+            build.skills.terrestrial.heal = document.getElementById("terrestrial_heal").value;
+            for (u = 0; u < 3; u++)  build.skills.terrestrial.utilities[u] = document.getElementById("terrestrial_utility_" + u).value;
+            build.skills.terrestrial.elite = document.getElementById("terrestrial_elite").value;
+
+            build.skills.aquatic.heal = document.getElementById("aquatic_heal").value;
+            for (u = 0; u < 3; u++) build.skills.aquatic.utilities[u] = document.getElementById("aquatic_utility_" + u).value;
+            build.skills.aquatic.elite = document.getElementById("aquatic_elite").value;
+
+            for (s = 0; s < 16; s++) {
+                build.specific[s] = document.getElementById("specific_" + s).value;
+            }
+
+            document.getElementById("chatcode").value = build.toString();
+        }
+
+        parse();
+    </script>
+</body>
+</html>
